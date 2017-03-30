@@ -367,7 +367,40 @@ target_link_libraries( # Specifies the target library.
 </code></pre>
 
 运行后输出结果如图:<img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/pic_15.png' /><br><br>
-上面演示的是添加外部静态库，添加动态  **so**  库也大同小异，把  **add_library（）**  里面的  **STATIC**  改成  **SHARED**  即可编译。
+上面演示的是添加外部静态库，添加动态  **so**  库也大同小异，把  **add_library（）**  里面的  **STATIC**  改成  **SHARED**  即可编译。<br><br>
+编译就是怎么简单,我们的全部配置其实都写入了另外一个脚本文件  **cmake_build_command.txt**  它的位置如图：<br><br>
+<img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_16.png' /><br><br>
+我们点开看看:<br>
+<pre>
+	Executable : /Users/jianxi/android/sdk/cmake/3.6.3155560/bin/cmake
+arguments : 
+-H/Users/jianxi/android/projects/o2o_2017_3_24_2.6.0/x264test1/app
+-B/Users/jianxi/android/projects/o2o_2017_3_24_2.6.0/x264test1/app/.externalNativeBuild/cmake/debug/armeabi-v7a
+-GAndroid Gradle - Ninja
+-DANDROID_ABI=armeabi-v7a
+-DANDROID_NDK=/Users/jianxi/android/sdk/ndk-bundle
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/Users/jianxi/android/projects/o2o_2017_3_24_2.6.0/x264test1/app/build/intermediates/cmake/debug/obj/armeabi-v7a
+-DCMAKE_BUILD_TYPE=Debug
+-DCMAKE_MAKE_PROGRAM=/Users/jianxi/android/sdk/cmake/3.6.3155560/bin/ninja
+-DCMAKE_TOOLCHAIN_FILE=/Users/jianxi/android/sdk/ndk-bundle/build/cmake/android.toolchain.cmake
+-DANDROID_NATIVE_API_LEVEL=14
+-DCMAKE_CXX_FLAGS=
+jvmArgs : 
+</pre>
+参数的含义看官网的吧<a href='https://developer.android.google.cn/ndk/guides/cmake.html'></a>, 撸了七七四十九个小时，实在撸不动了，这些参数可以在build.gradle里面添加,如下:
+<pre>defaultConfig {
+    ...
+    // This block is different from the one you use to link Gradle
+    // to your CMake build script.
+    externalNativeBuild {
+      cmake {
+        ...
+        // Use the following syntax when passing arguments to variables:
+        // arguments "-DVAR_NAME=VALUE"
+        arguments "-DANDROID_ARM_NEON=TRUE"
+      }
+    }
+  }</pre>
 
 ## 总结
-撸了七七四十九个小时，实在撸不动了，上面三种姿势肯定推荐第三种， **CMake**  工具确实不错，也是  **AS 2.2**  推出的功能。在实际项目中肯定会有一些这样那样的问题，特别是导入一些像  **FFmpeg**  啊  **x264**  这些外部库的时候，后面会写一些文章把编译  **FFmpeg**  与实际项目中运用的姿势做一个分享，欢迎一起交流。我的  **github**  主页：<a href='https://github.com/mabeijianxi'>https://github.com/mabeijianxi</a>，我的csdn主页：<a href='http://blog.csdn.net/mabeijianxi'>http://blog.csdn.net/mabeijianxi</a>。
+上面三种姿势肯定推荐第三种， **CMake**  工具确实不错，也是  **AS 2.2**  推出的功能。在实际项目中肯定会有一些这样那样的问题，特别是导入一些像  **FFmpeg**  啊  **x264**  这些外部库的时候，后面会写一些文章把编译  **FFmpeg**  与实际项目中运用的姿势做一个分享，欢迎一起交流。我的  **github**  主页：<a href='https://github.com/mabeijianxi'>https://github.com/mabeijianxi</a>，我的csdn主页：<a href='http://blog.csdn.net/mabeijianxi'>http://blog.csdn.net/mabeijianxi</a>。

@@ -6,13 +6,13 @@
 
 ## 一、徒手编写Android.mk然后ndk-build编译：
 这种编译其实是用make工具来玩的，在  linux 徒手写并编译过c的应该很清楚，通过编写makefile，然后再用make编译已经比不停的用gcc命令逐个编译要爽很多,但是 makefile 的编写还是有点蛋疼。程序员都是化繁为简善解人意的，通过 ndk 工具我们无需自己写 makefile 了，现在你只要安心撸自己关心的代码就行了。<br><br>
-1、在main下新建 **jni** 目录，如图：<br><img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_2.png' /><br><br>
+1、在main下新建 **jni** 目录，如图：<br><br><img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_2.png' /><br><br>
 2、再新建一个  **c**  或者  **c++** 文件，如图：<br><br><img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_3.png' /><br><br>
 3、在java里面声明个  **native** 方法：<br>
 <pre><code>
 	    private native String jniTellMeWhy(String hiJni);
 </code></pre>
-4、copy全类名<br><img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_4.png' /><br>然后去我们新建的那个  **hi_jni.cpp**  里面去声明一个方法，这里就添加头文件了，直接干。命名规则是死的，粘贴一下把"."换成"  **_**  "再加上“  **_方法名**  ”,我们是有返回值的且是个  **String**  的，对应的就是  **jstring**   ，最前面拼上固定的“  **Java_**  ”。我们传入了一个参数，但是规定是每个函数默认都会两个参数，一个是  **JNIEnv**  指针类型的结构体，一个是调用者对象，比如我们这里就是MainActivity对象，其实玩过  **c++**  的都知道里面每个函数其实默认也会传入个  **this**  指针的，不然一个类可以有那么多对象怎么知道是哪个对象调用的？言归正传，还有一个参数就是我们传入的  **String**  值了。如下：<br>
+4、copy全类名<br><br><img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_4.png' /><br><br>然后去我们新建的那个  **hi_jni.cpp**  里面去声明一个方法，这里就添加头文件了，直接干。命名规则是死的，粘贴一下把"."换成"  **_**  "再加上“  **_方法名**  ”,我们是有返回值的且是个  **String**  的，对应的就是  **jstring**   ，最前面拼上固定的“  **Java_**  ”。我们传入了一个参数，但是规定是每个函数默认都会两个参数，一个是  **JNIEnv**  指针类型的结构体，一个是调用者对象，比如我们这里就是MainActivity对象，其实玩过  **c++**  的都知道里面每个函数其实默认也会传入个  **this**  指针的，不然一个类可以有那么多对象怎么知道是哪个对象调用的？言归正传，还有一个参数就是我们传入的  **String**  值了。如下：<br>
 <pre><code>
 	#include <jni.h>
 	#include <stdio.h>

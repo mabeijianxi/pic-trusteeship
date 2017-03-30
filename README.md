@@ -1,5 +1,5 @@
 # Android下jni的编译
-	说明：本篇不撸代码，只玩编译
+	说明：本篇不撸代码，只玩编译,其包含了Android studio 2.2最新的JNI玩法
 	编译环境：macOS 10.12.3
 	工具包含：Android Studio 2.2  NDK-r14 
  在Android下要玩jni首先下载ndk是必须的，可以直接去<a href='https://developer.android.google.cn/ndk/downloads/index.html'>https://developer.android.google.cn/ndk/downloads/index.html</a>下载，当然我们家AS为开发者也提供了便捷<br><br><img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_1.png' /><br><br>只需如图勾选然后OK即可，我的版本是r14，值得一提的是 **google ndk-build** 命令在  **r13** 后默认使用  **Clang**，并将在后续版本中移除  **GCC**，其编译速度更快、编译产出更小、出错提示更友好。

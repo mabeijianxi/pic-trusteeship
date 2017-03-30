@@ -41,14 +41,14 @@ LOCAL_C_INCLUDES += $(LOCAL_PATH)
  #LOCAL_LDLIBS := -llog
 include $(BUILD_SHARED_LIBRARY)
 </code></pre>
->  **LOCAL_PATH**  ：是得最先配置的，它用于在开发tree中查找源文件。<br>
->  **include $(CLEAR_VARS)**  ： **CLEAR_VARS**  变量指向特殊  **GNU Makefile**  ，可为您清除许多  **LOCAL_XXX**  变量，例如  **LOCAL_MODULE**   、  **LOCAL_SRC_FILES**  和   **LOCAL_STATIC_LIBRARIES**  。 请注意，它不会清除。<br>
->  **LOCAL_PATH**  :此变量必须保留其值，因为系统在单一  **GNU Make**  执行环境（其中所有变量都是全局的）中解析所有构建控制文件。 在描述每个模块之前，必须声明（重新声明）此变量。<br>
->  **LOCAL_MODULE**  ：存储您要构建的模块的名称,并指定的想生成的  **so**  叫什么名字。当然生成产物的时候前面会自动拼接上  **lib**  ,后面会自动拼接上  **.so**  。<br>
->  **LOCAL_SRC_FILES**  :要编译的源文件，多个文件以空格分开即可。当导入  **.a**  或者  **.so**  文件的时候一个模块只能添加一个文件，后面将演示。<br>
->  **LOCAL_C_INCLUDES**  :可以使用此可选变量指定相对于  **NDK root**  目录的路径列表，以便在编译所有源文件（C、C++ 和 Assembly）时添加到 include 搜索路径，通常是原文件地址、头文件地址等。<br>
->  **LOCAL_LDLIBS**  :这里是添加一个本地依赖库，比如可以添加一个  **log**  库，当然我没用到就注释了。<br>
->   **include $(BUILD_SHARED_LIBRARY)**  :这一行帮助系统将所有内容连接到一起， **BUILD_SHARED_LIBRARY**  变量指向  **GNU Makefile**  脚本，用于收集您自最近 include 后在   **LOCAL_XXX**  变量中定义的所有信息。 此脚本确定要构建的内容及其操作方法。 **BUILD_SHARED_LIBRARY**  代表动态库， **BUILD_STATIC_LIBRARY** 代表静态库 。<br>
+ **LOCAL_PATH**  ：是得最先配置的，它用于在开发tree中查找源文件。<br>
+ **include $(CLEAR_VARS)**  ： **CLEAR_VARS**  变量指向特殊  **GNU Makefile**  ，可为您清除许多  **LOCAL_XXX**  变量，例如  **LOCAL_MODULE**   、  **LOCAL_SRC_FILES**  和   **LOCAL_STATIC_LIBRARIES**  。 请注意，它不会清除。<br>
+ **LOCAL_PATH**  :此变量必须保留其值，因为系统在单一  **GNU Make**  执行环境（其中所有变量都是全局的）中解析所有构建控制文件。 在描述每个模块之前，必须声明（重新声明）此变量。<br>
+  **LOCAL_MODULE**  ：存储您要构建的模块的名称,并指定的想生成的  **so**  叫什么名字。当然生成产物的时候前面会自动拼接上  **lib**  ,后面会自动拼接上  **.so**  。<br>
+  **LOCAL_SRC_FILES**  :要编译的源文件，多个文件以空格分开即可。当导入  **.a**  或者  **.so**  文件的时候一个模块只能添加一个文件，后面将演示。<br>
+  **LOCAL_C_INCLUDES**  :可以使用此可选变量指定相对于  **NDK root**  目录的路径列表，以便在编译所有源文件（C、C++ 和 Assembly）时添加到 include 搜索路径，通常是原文件地址、头文件地址等。<br>
+  **LOCAL_LDLIBS**  :这里是添加一个本地依赖库，比如可以添加一个  **log**  库，当然我没用到就注释了。<br>
+**include $(BUILD_SHARED_LIBRARY)**  :这一行帮助系统将所有内容连接到一起， **BUILD_SHARED_LIBRARY**  变量指向  **GNU Makefile**  脚本，用于收集您自最近 include 后在   **LOCAL_XXX**  变量中定义的所有信息。 此脚本确定要构建的内容及其操作方法。 **BUILD_SHARED_LIBRARY**  代表动态库， **BUILD_STATIC_LIBRARY** 代表静态库 。<br>
 
 
 7、编写  **Application.mk**  ：

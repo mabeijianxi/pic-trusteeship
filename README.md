@@ -2,7 +2,7 @@
 	说明：本篇不撸代码，只玩编译
 	编译环境：macOS 10.12.3
 	工具包含：Android Studio 2.2  NDK-r14 
- 在Android下要玩jni首先下载ndk是必须的，可以直接去<a href='https://developer.android.google.cn/ndk/downloads/index.html'>https://developer.android.google.cn/ndk/downloads/index.html</a>下载，当然我们家AS为开发者也提供了便捷<br><img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_1.png' /><br><br>只需如图勾选然后OK即可，我的版本是r14，值得一提的是 **google ndk-build** 命令在  **r13** 后默认使用  **Clang**，并将在后续版本中移除  **GCC**，其编译速度更快、编译产出更小、出错提示更友好。
+ 在Android下要玩jni首先下载ndk是必须的，可以直接去<a href='https://developer.android.google.cn/ndk/downloads/index.html'>https://developer.android.google.cn/ndk/downloads/index.html</a>下载，当然我们家AS为开发者也提供了便捷<br><br><img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_1.png' /><br><br>只需如图勾选然后OK即可，我的版本是r14，值得一提的是 **google ndk-build** 命令在  **r13** 后默认使用  **Clang**，并将在后续版本中移除  **GCC**，其编译速度更快、编译产出更小、出错提示更友好。
 
 ## 一、徒手编写Android.mk然后ndk-build编译：
 这种编译其实是用make工具来玩的，在  linux 徒手写并编译过c的应该很清楚，通过编写makefile，然后再用make编译已经比不停的用gcc命令逐个编译要爽很多,但是 makefile 的编写还是有点蛋疼。程序员都是化繁为简善解人意的，通过 ndk 工具我们无需自己写 makefile 了，现在你只要安心撸自己关心的代码就行了。<br><br>

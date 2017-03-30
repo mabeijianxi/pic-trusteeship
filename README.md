@@ -1,11 +1,11 @@
 # Android下jni的编译
-	说明：本篇不写代码，只做编译教程用
-	系统：macOS 10.12.3
-	工具：Android Studio 2.2
+	说明：本篇不撸代码，只玩编译
+	编译环境：macOS 10.12.3
+	工具包含：Android Studio 2.2  NDK-r14 
  在Android下要玩jni首先下载ndk是必须的，可以直接去<a href='https://developer.android.google.cn/ndk/downloads/index.html'>https://developer.android.google.cn/ndk/downloads/index.html</a>下载，当然我们家AS为开发者也提供了便捷<img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_1.png' />,只需如图勾选然后OK即可，我的版本是r14，值得一提的是 **google ndk-build** 命令在  **r13** 后默认使用  **Clang**，并将在后续版本中移除  **GCC**，其编译速度更快、编译产出更小、出错提示更友好。
 
 ## 一、徒手编写Android.mk然后ndk-build编译：
-	这种编译其实是用make工具来玩的，在  linux 徒手写并编译过c的应该很清楚，通过编写makefile，然后再用make编译已经比不停的用gcc命令逐个编译要爽很多,但是 makefile 的编写还是有点蛋疼。程序员都是化繁为简善解人意的，通过 ndk 工具我们无需自己写 makefile 了，现在你只要安心撸自己关心的代码就行了。<br><br>
+这种编译其实是用make工具来玩的，在  linux 徒手写并编译过c的应该很清楚，通过编写makefile，然后再用make编译已经比不停的用gcc命令逐个编译要爽很多,但是 makefile 的编写还是有点蛋疼。程序员都是化繁为简善解人意的，通过 ndk 工具我们无需自己写 makefile 了，现在你只要安心撸自己关心的代码就行了。<br><br>
 1、在main下新建 **jni** 目录，如图：<img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_2.png' /><br><br>
 2、再新建一个  **c**  或者  **c++** 文件，如图：<br><img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_3.png' /><br><br>
 3、在java里面声明个  **native** 方法：<br>
@@ -80,7 +80,7 @@ include $(BUILD_SHARED_LIBRARY)
     }
 </code></pre>
 结果是：<img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_5.png' /><br><br>
-  **添加一预构建库编译：**  <br>
+  **添加一预构建库编译：**  <br><br>
 其实和咋们Android中的添加依赖差不多，我们要编译一个原生库，这个库的功能是可以按照  **H264**  编码视频，然后我们不想自己写那么多代码，所以我们引入开源的  **libx264**  ，我们拿到编译好的  **libx264.a**  或者  **libx264.so**  和其头文件，这个时候我们只需要导入一起编译即可：
 目录结构如图<br><img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_10.png' /><br><br>
 有了头文件我们即可include入我们的  **hi_jni.cpp**  里面自由蹂蹑。<br><br>
@@ -103,10 +103,10 @@ include $(BUILD_SHARED_LIBRARY
 </code></pre>
 如果我们导入  **.a**  的静态库的话第一组就如上所写，没添加一组的时候必须执行  **include $(CLEAR_VARS)**  ，  **LOCAL_MODULE**  的值就各自喜好了，第一组的  **LOCAL_SRC_FILES**  我们指向想导入的静态库地址，第一组的  **LOCAL_C_INCLUDES**  指向其头文件地址，然后  **include $(PREBUILT_STATIC_LIBRARY）**  代表生成静态预构建。
 我们在第二组中引用第一组的静态预构建也就是  **LOCAL_STATIC_LIBRARIES := x264**   ，引用动态预构建只需把  **STATIC**  修改为  **SHARED**  即可。配置完成即可在当前目录打开命令行执行  **ndk-build**   命令生成产物。如果第一组你指定的是  **.so**  的动态库，使用的时候也得在  **java**  层  **System.loadLibrary("x264")**  。
-## 二、通过配置AS中build.gradle来编译：
+## 二、通过配置AS中build.gradle来编译：<br>
 	这种方式比上一中又简化了很多，无需再自己编写  **Android.mk**  了，但原理都是一样的。
-1、在  **main**  下新建  **jni**  目录，如图：<img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_2.png' /><br><br>
-2、再新建一个  **c**  或者  **c++**  文件，如图：<img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_3.png' /><br><br>
+1、在  **main**  下新建  **jni**  目录，如图：<br><img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_2.png' /><br><br>
+2、再新建一个  **c**  或者  **c++**  文件，如图：<br><img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_3.png' /><br><br>
 3、找到你项目的  **gradle.properties**   ，添加一行  **android.useDeprecatedNdk=true  **<br><br>
 4、打开你主  **Module**  的  **build.gradle**  ,在  **defaultConfig**  里添加:<br><br>
 <pre><code>
@@ -183,7 +183,7 @@ Java_com_example_jianxi_x264test1_MainActivity_stringFromJNI(
         }
 </code></pre>
 在主  **Mudule**  的跟目录下多了个  **CMakeLists.txt**  ，我们定制自己的原生代码的时候主要就是修改  **CMakeLists.txt**  里面的配置，下面也会详细讲解.<br><br>
-#### 在原生代码里面添加本地库：
+### 在原生代码里面添加本地库：
 这里以  **log**  库为例， **log**  库是  **android**  下的，如果我们新建项目的时候勾选上了    **Incude C++ Support**  ，那么自动生成的  **CMakeLists.txt**  里面默认会为我们添加  **log**  库，置于  **CMakeLists.txt**  的配置一会儿道来。<br><br>
 
 下面是导入  **log**  库的头文件，并且宏定义  **log**  打印函数的代码:
@@ -237,7 +237,7 @@ Java_com_example_jianxi_jnidemo_MainActivity_jniTellMeWhy(JNIEnv *env, jobject o
     return env->NewStringUTF(data);
 }
 </code></pre>
-#### 接下我们仔细研究下 CMakeLists.txt<br>
+### 接下我们仔细研究下 CMakeLists.txt<br>
 我复制了里面自动生成的一些关键脚本：
 <pre>
 	add_library( # Sets the name of the library.
@@ -281,9 +281,9 @@ include_directories(src/main/cpp/include/)
    **find_library**  :将  **find_library()** 命令添加到您的  **CMake**  构建脚本中以定位  **NDK**  库，并将其路径存储为一个变量。您可以使用此变量在构建脚本的其他部分引用  **NDK**  库。<br>
   **target_link_libraries**  :指定要关联到原生库的库，第一个自然是我们  **add_library**  里面指定的库名字  **hi_jni**  库，然后可以看到  **${log-lib}**  ，也就是引用了  **find_library**  里面定义的日志库。<br>
 经过上面的脚本，基本可以玩起来了。
-#### 引入其他编译好的静态库或者动态库
+### 引入其他编译好的静态库或者动态库
 我们需要在  **add_library**  里面把我们的库  **add**  进去，也是三个参数，指定库名字，指定库类型，第三个指定为  **IMPORTED**  关键字即可，然后我们需要再添加个  **set_target_properties()**  命令，里面 也是三个参数，要为其设置属性的库名称，指定其预构建类型，如 PROPERTIES   **IMPORTED_LOCATION**  ，最后指定  **.a .so**  库的绝对地址。<br><br>
-如图是我的目录结构:<img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_14.png' /><br><br>
+如图是我的目录结构:<br><br><img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_14.png' /><br><br>
 <pre>
 	add_library( # Sets the name of the library.
              hi_jni
@@ -371,4 +371,4 @@ target_link_libraries( # Specifies the target library.
 上面演示的是添加外部静态库，添加动态  **so**  库也大同小异，把  **add_library（）**  里面的  **STATIC**  改成  **SHARED**  即可编译。
 
 ## 总结
-上面三种姿势肯定推荐第三种， **CMake**  工具确实不错，也是  **AS 2.2**  推出的功能。在实际项目中肯定会有一些这样那样的问题，特别是导入一些像  **FFmpeg**  啊  **x264**  这些外部库的时候，后面会写一些文章把编译  **FFmpeg**  与实际项目中运用的姿势做一个分享，欢迎一起交流。我的  **github**  主页：<a href='https://github.com/mabeijianxi'>https://github.com/mabeijianxi</a>，我的csdn主页：<a href='http://blog.csdn.net/mabeijianxi'>http://blog.csdn.net/mabeijianxi</a>。
+撸了七七四十九个小时，实在撸不动了，上面三种姿势肯定推荐第三种， **CMake**  工具确实不错，也是  **AS 2.2**  推出的功能。在实际项目中肯定会有一些这样那样的问题，特别是导入一些像  **FFmpeg**  啊  **x264**  这些外部库的时候，后面会写一些文章把编译  **FFmpeg**  与实际项目中运用的姿势做一个分享，欢迎一起交流。我的  **github**  主页：<a href='https://github.com/mabeijianxi'>https://github.com/mabeijianxi</a>，我的csdn主页：<a href='http://blog.csdn.net/mabeijianxi'>http://blog.csdn.net/mabeijianxi</a>。

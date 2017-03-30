@@ -387,7 +387,7 @@ arguments :
 -DCMAKE_CXX_FLAGS=
 jvmArgs : 
 </pre>
-参数的含义看官网的吧<a href='https://developer.android.google.cn/ndk/guides/cmake.html'></a>, 撸了七七四十九个小时，实在撸不动了，这些参数可以在build.gradle里面添加,如下:
+参数的含义看官网的吧<a href='https://developer.android.google.cn/ndk/guides/cmake.html'>https://developer.android.google.cn/ndk/guides/cmake.html</a>, 撸了七七四十九个小时，实在撸不动了，这些参数可以在build.gradle里面添加,如下:
 <pre>defaultConfig {
     ...
     // This block is different from the one you use to link Gradle

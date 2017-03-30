@@ -1,4 +1,3 @@
-# Android下jni的编译
 	说明：本篇不撸代码，只玩编译,其包含了Android studio 2.2最新的JNI玩法
 	编译环境：macOS 10.12.3
 	工具包含：Android Studio 2.2  NDK-r14 
@@ -107,7 +106,7 @@ include $(BUILD_SHARED_LIBRARY
 	这种方式比上一中又简化了很多，无需再自己编写  **Android.mk**  了，但原理都是一样的。
 1、在  **main**  下新建  **jni**  目录，如图：<br><img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_2.png' /><br><br>
 2、再新建一个  **c**  或者  **c++**  文件，如图：<br><img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_3.png' /><br><br>
-3、找到你项目的  **gradle.properties**   ，添加一行  **android.useDeprecatedNdk=true  **<br><br>
+3、找到你项目的  **gradle.properties**   ，添加一行  **android.useDeprecatedNdk=true**    <br><br>
 4、打开你主  **Module**  的  **build.gradle**  ,在  **defaultConfig**  里添加:<br><br>
 <pre><code>
 	ndk{
@@ -120,7 +119,7 @@ include $(BUILD_SHARED_LIBRARY
 6、同 徒手编写Android.mk然后ndk-build编译 中的 4.<br> <br>
 7、同 徒手编写Android.mk然后ndk-build编译 中的 10.<br><br>
 
-这种方式不仅 so easy,当配置好后编译器还能帮我们像在写  **Java**  代码一样做代码提示。我们可以打开 主  **Mudoul下debug->ndk**  文件夹:<img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_6.png' />,看自动给我们生成了  **Android.mk**  ，所以说原理都是一样的。<br><br>
+这种方式不仅 so easy,当配置好后编译器还能帮我们像在写  **Java**  代码一样做代码提示。我们可以打开 主  **Mudoul下debug->ndk**  文件夹:<br><img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_6.png' /><br>看自动给我们生成了  **Android.mk**  ，所以说原理都是一样的。<br><br>
 ## 三、通过AS的cMake插件编译：
 
 没错，今天的重头戏就是这个，也是必须把AS升级到2.2以后才能玩的功能，有了它写原生代码可谓是如鱼得水，做到真走的徒手一千行，没有比友基！<br>

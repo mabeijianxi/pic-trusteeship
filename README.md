@@ -28,7 +28,7 @@ Java_com_example_jianxi_jnidemo_MainActivity_jniTellMeWhy(JNIEnv *env, jobject o
     return env->NewStringUTF(data);
 }
 </code></pre>
-我这里用的是  **c++**  所以得加上 **extern "C"**   ，原因很简单，在  **C++**  中函数在编译的时候会拼接上参数，这也是  **c++**  中函数重载的处理机制，比如一个  **set(int a)**   和一个  **set(int a,int b)**  ，在编译的时候就变成了  **set_int**  与  **set_int_int**  ，我们加上  **extern ”C“**   就表示大爷想按照C来编译，所以函数名字后面就不会拼接上参数类型了。<br><br>
+我这里用的是  **c++**  所以得加上 **extern "C"**    ，原因很简单，在  **C++**  中函数在编译的时候会拼接上参数，这也是  **c++**  中函数重载的处理机制，比如一个  **set(int a)**   和一个  **set(int a,int b)**  ，在编译的时候就变成了  **set_int**  与  **set_int_int**  ，我们加上  **extern ”C“**   就表示大爷想按照C来编译，所以函数名字后面就不会拼接上参数类型了。<br><br>
 5、在jni目录下新建两个文件一个叫  **Android.mk**  ,一个叫  **Application.mk**  。<br><br>
 6、编写Android.mk，最简单的编写如下，后面将介绍一些稍微牛逼点点的。<br>
 <pre><code>
@@ -41,9 +41,9 @@ LOCAL_C_INCLUDES += $(LOCAL_PATH)
 include $(BUILD_SHARED_LIBRARY)
 </code></pre>
  **LOCAL_PATH**  ：是得最先配置的，它用于在开发tree中查找源文件。<br><br>
- **include $(CLEAR_VARS)**  ： **CLEAR_VARS**  变量指向特殊  **GNU Makefile**  ，可为您清除许多  **LOCAL_XXX**  变量，例如  **LOCAL_MODULE**   、  **LOCAL_SRC_FILES**  和   **LOCAL_STATIC_LIBRARIES**  。 请注意，它不会清除。<br><br>
+ **include $(CLEAR_VARS)**  ： **CLEAR_VARS**  变量指向特殊  **GNU Makefile**  ，可为您清除许多  **LOCAL_XXX**  变量，例如  **LOCAL_MODULE**   、  **LOCAL_SRC_FILES**  和   **LOCAL_STATIC_LIBRARIES**  。 请注意，它不会清除  **LOCAL_PATH**  <br><br>
  **LOCAL_PATH**  :此变量必须保留其值，因为系统在单一  **GNU Make**  执行环境（其中所有变量都是全局的）中解析所有构建控制文件。 在描述每个模块之前，必须声明（重新声明）此变量。<br><br>
-  **LOCAL_MODULE**  ：存储您要构建的模块的名称,并指定的想生成的  **so**  叫什么名字。当然生成产物的时候前面会自动拼接上  **lib**  ,后面会自动拼接上  **.so**  。<br><br>
+  **LOCAL_MODULE**  ：存储您要构建的模块的名称,并指定想生成的  **so**  叫什么名字。当然生成产物的时候前面会自动拼接上  **lib**  ,后面会自动拼接上  **.so**  。<br><br>
   **LOCAL_SRC_FILES**  :要编译的源文件，多个文件以空格分开即可。当导入  **.a**  或者  **.so**  文件的时候一个模块只能添加一个文件，后面将演示。<br><br>
   **LOCAL_C_INCLUDES**  :可以使用此可选变量指定相对于  **NDK root**  目录的路径列表，以便在编译所有源文件（C、C++ 和 Assembly）时添加到 include 搜索路径，通常是原文件地址、头文件地址等。<br>
   **LOCAL_LDLIBS**  :这里是添加一个本地依赖库，比如可以添加一个  **log**  库，当然我没用到就注释了。<br><br>
@@ -100,10 +100,10 @@ LOCAL_C_INCLUDES += $(LOCAL_PATH)
 LOCAL_STATIC_LIBRARIES := x264
 include $(BUILD_SHARED_LIBRARY
 </code></pre>
-如果我们导入  **.a**  的静态库的话第一组就如上所写，没添加一组的时候必须执行  **include $(CLEAR_VARS)**  ，  **LOCAL_MODULE**  的值就各自喜好了，第一组的  **LOCAL_SRC_FILES**  我们指向想导入的静态库地址，第一组的  **LOCAL_C_INCLUDES**  指向其头文件地址，然后  **include $(PREBUILT_STATIC_LIBRARY）**  代表生成静态预构建。
+如果我们导入  **.a**  的静态库的话第一组就如上所写，每添加一组的时候必须执行  **include $(CLEAR_VARS)**  ，  **LOCAL_MODULE**  的值就各自喜好了，第一组的  **LOCAL_SRC_FILES**  我们指向想导入的静态库地址，第一组的  **LOCAL_C_INCLUDES**  指向其头文件地址，然后  **include $(PREBUILT_STATIC_LIBRARY）**  代表生成静态预构建。
 我们在第二组中引用第一组的静态预构建也就是  **LOCAL_STATIC_LIBRARIES := x264**   ，引用动态预构建只需把  **STATIC**  修改为  **SHARED**  即可。配置完成即可在当前目录打开命令行执行  **ndk-build**   命令生成产物。如果第一组你指定的是  **.so**  的动态库，使用的时候也得在  **java**  层  **System.loadLibrary("x264")**  。
 ## 二、通过配置AS中build.gradle来编译：<br>
-	这种方式比上一中又简化了很多，无需再自己编写  **Android.mk**  了，但原理都是一样的。
+这种方式比上一中又简化了很多，无需再自己编写 **Android.mk**  了，但原理都是一样的。
 1、在  **main**  下新建  **jni**  目录，如图：<br><img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_2.png' /><br><br>
 2、再新建一个  **c**  或者  **c++**  文件，如图：<br><img src='https://github.com/mabeijianxi/pic-trusteeship/blob/master/pic/jni/jni_3.png' /><br><br>
 3、找到你项目的  **gradle.properties**   ，添加一行  **android.useDeprecatedNdk=true**    <br><br>
@@ -114,7 +114,7 @@ include $(BUILD_SHARED_LIBRARY
             abiFilter 'armeabi-v7a'
         }
 </code></pre>
-名如其实， **moduleName**  是你给生成的  **So** 的取的名字，当然它会在前面拼接上 “  **lib**  ”，会在后面拼接上  **.so**  ，于是生成的名字就  **libhi_jni.so**  ,  **abiFilter**  嘛就是你想保留哪些架构类型的  **so**  ，一般  **arm**  的就够玩了，当然除了这些还有很多可配参数,比如想添加个日志库来玩玩，那就添加这行呗:  **IdLibs “log“**   。<br><br>
+名如其实， **moduleName**  是你给生成的  **So** 取的名字，当然它会在前面拼接上 “  **lib**  ”，会在后面拼接上  **.so**  ，于是生成的名字就  **libhi_jni.so**  ,  **abiFilter**  嘛就是你想保留哪些架构类型的  **so**  ，一般  **arm**  的就够玩了，当然除了这些还有很多可配参数,比如想添加个日志库来玩玩，那就添加这行呗:  **IdLibs “log“**   。<br><br>
 5、同 徒手编写Android.mk然后ndk-build编译 中的 3。<br><br>
 6、同 徒手编写Android.mk然后ndk-build编译 中的 4.<br> <br>
 7、同 徒手编写Android.mk然后ndk-build编译 中的 10.<br><br>
